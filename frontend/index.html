@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Homelab Hub | PoC</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#1f2b49",
+              "surface-container-low": "#091328",
+              "on-primary": "#1c00a0",
+              "primary-fixed-dim": "#8885ff",
+              "tertiary": "#ff9dd1",
+              "surface-container": "#0f1930",
+              "on-primary-container": "#14007e",
+              "on-tertiary-fixed": "#360024",
+              "on-secondary-container": "#f3f8ff",
+              "error-dim": "#d73357",
+              "on-secondary-fixed-variant": "#00567c",
+              "secondary-dim": "#17a8ec",
+              "tertiary-fixed": "#fd8bca",
+              "on-tertiary": "#6c0f4d",
+              "surface": "#060e20",
+              "outline": "#6d758c",
+              "surface-variant": "#192540",
+              "tertiary-dim": "#eb7bba",
+              "inverse-surface": "#faf8ff",
+              "on-surface-variant": "#a3aac4",
+              "surface-container-lowest": "#000000",
+              "secondary": "#34b5fa",
+              "tertiary-container": "#fa88c8",
+              "primary": "#a7a5ff",
+              "on-primary-fixed": "#000000",
+              "on-tertiary-fixed-variant": "#6d104e",
+              "on-background": "#dee5ff",
+              "primary-container": "#9795ff",
+              "on-primary-fixed-variant": "#1a0099",
+              "background": "#060e20",
+              "secondary-container": "#006591",
+              "secondary-fixed": "#a4d8ff",
+              "on-tertiary-container": "#5e0042",
+              "surface-container-highest": "#192540",
+              "on-secondary": "#003047",
+              "on-error-container": "#ffb2b9",
+              "primary-dim": "#645efb",
+              "surface-tint": "#a7a5ff",
+              "outline-variant": "#40485d",
+              "surface-container-high": "#141f38",
+              "inverse-on-surface": "#4d556b",
+              "error-container": "#a70138",
+              "surface-dim": "#060e20",
+              "secondary-fixed-dim": "#81ccff",
+              "primary-fixed": "#9795ff",
+              "inverse-primary": "#4e45e4",
+              "on-surface": "#dee5ff",
+              "on-secondary-fixed": "#003853",
+              "tertiary-fixed-dim": "#ee7ebc",
+              "error": "#ff6e84",
+              "on-error": "#490013"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-sidebar {
+            background: rgba(9, 19, 40, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #060e20; }
+        ::-webkit-scrollbar-thumb { background: #40485d; border-radius: 10px; }
+
+        /* Sidebar collapsed state */
+        #sidebar.collapsed { width: 80px; }
+        #sidebar.collapsed .sidebar-text { display: none; }
+        #sidebar.collapsed .sidebar-header { padding-left: 0; padding-right: 0; display: flex; justify-content: center; }
+        #sidebar.collapsed .sidebar-header h1 { font-size: 1.25rem; }
+        #sidebar.collapsed .sidebar-header p { display: none; }
+        #sidebar.collapsed nav button, #sidebar.collapsed .settings-link { justify-content: center; padding-left: 0; padding-right: 0; }
+        
+        main.sidebar-collapsed { margin-left: 80px; }
+        @media (max-width: 768px) {
+            main.sidebar-collapsed { margin-left: 0; }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+    <!-- Sidebar Shell -->
+    <aside id="sidebar" class="h-screen w-64 fixed left-0 top-0 overflow-y-auto hidden md:flex flex-col py-6 glass-sidebar shadow-2xl shadow-black/40 z-50 transition-all duration-300">
+        <div class="px-6 mb-10 sidebar-header relative">
+            <h1 class="text-xl font-bold bg-gradient-to-br from-[#a7a5ff] to-[#645efb] bg-clip-text text-transparent font-headline tracking-tighter">HOMELAB</h1>
+            <p class="sidebar-text font-['Manrope'] font-semibold tracking-wide uppercase text-[11px] text-slate-400">Architect Hub</p>
+            
+            <button id="sidebar-toggle" class="absolute -right-3 top-0 bg-surface-container-highest text-primary rounded-full p-1 shadow-lg hover:text-secondary transition-colors border border-outline-variant/20">
+                <span class="material-symbols-outlined text-sm" id="toggle-icon">chevron_left</span>
+            </button>
+        </div>
+        <nav class="flex-1 space-y-1" id="category-nav">
+            <button class="w-full flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#a7a5ff]/10 to-transparent text-[#a7a5ff] border-r-2 border-[#a7a5ff] font-['Manrope'] font-semibold tracking-wide uppercase text-[11px] transition-all" data-category="All" id="nav-all">
+                <span class="material-symbols-outlined">dashboard</span>
+                <span class="sidebar-text">All Systems</span>
+            </button>
+            <button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" data-category="Desenvolvimento" id="nav-desenvolvimento">
+                <span class="material-symbols-outlined">code</span>
+                <span class="sidebar-text">Desenvolvimento</span>
+            </button>
+            <button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" data-category="Infraestrutura" id="nav-infraestrutura">
+                <span class="material-symbols-outlined">database</span>
+                <span class="sidebar-text">Infraestrutura</span>
+            </button>
+            <button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" data-category="IA" id="nav-ia">
+                <span class="material-symbols-outlined">psychology</span>
+                <span class="sidebar-text">IA</span>
+            </button>
+        </nav>
+        <div class="px-6 pt-6 border-t border-outline-variant/20 mt-auto">
+            <a href="settings.html" class="settings-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]">
+                <span class="material-symbols-outlined">settings</span>
+                <span class="sidebar-text">Settings</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="ml-0 md:ml-64 min-h-screen transition-all duration-300">
+        <!-- Top Navigation -->
+        <header class="sticky top-0 z-40 bg-slate-950/40 backdrop-blur-md flex justify-between items-center w-full px-6 py-4">
+            <div class="flex items-center gap-4 flex-1">
+                <div class="relative w-full max-w-md">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+                    <input id="search-input" class="bg-surface-container-highest border-none rounded-xl pl-10 pr-4 py-2 text-sm w-full focus:ring-2 focus:ring-secondary/50 outline-none text-on-surface placeholder:text-on-surface-variant/50" placeholder="Search services..." type="text"/>
+                </div>
+            </div>
+            <div class="flex items-center gap-4 ml-4">
+                <button class="p-2 text-slate-400 hover:text-secondary transition-colors" id="theme-toggle">
+                    <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="px-6 py-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                <div>
+                    <h2 class="text-4xl font-extrabold font-headline tracking-tight text-on-background">Homelab Hub PoC</h2>
+                    <p class="text-on-surface-variant mt-2 max-w-xl">Static dashboard for local application redirection, following the Kinetic Architect design system.</p>
+                </div>
+                <div class="flex gap-3" id="stats-summary">
+                    <!-- Stats will be updated by JS -->
+                </div>
+            </div>
+
+            <!-- Bento Grid of Service Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="service-grid">
+                <!-- Cards will be rendered here via script.js -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Bottom Nav -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-highest/80 backdrop-blur-xl flex justify-around items-center py-4 z-50">
+        <button class="text-secondary" data-category="All"><span class="material-symbols-outlined">dashboard</span></button>
+        <button class="text-on-surface-variant" data-category="Desenvolvimento"><span class="material-symbols-outlined">code</span></button>
+        <button class="text-on-surface-variant" data-category="Infraestrutura"><span class="material-symbols-outlined">database</span></button>
+        <button class="text-on-surface-variant" data-category="IA"><span class="material-symbols-outlined">psychology</span></button>
+    </nav>
+
+    <script src="script.js"></script>
+</body>
+</html>

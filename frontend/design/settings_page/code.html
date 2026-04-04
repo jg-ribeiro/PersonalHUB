@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Services &amp; Appearance | Kinetic Architect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "on-surface": "#dee5ff",
+              "secondary-dim": "#17a8ec",
+              "surface-variant": "#192540",
+              "surface-container-high": "#141f38",
+              "on-background": "#dee5ff",
+              "surface-dim": "#060e20",
+              "on-error-container": "#ffb2b9",
+              "secondary-fixed-dim": "#81ccff",
+              "tertiary-container": "#fa88c8",
+              "surface": "#060e20",
+              "secondary": "#34b5fa",
+              "surface-container-lowest": "#000000",
+              "background": "#060e20",
+              "tertiary-fixed-dim": "#ee7ebc",
+              "on-secondary": "#003047",
+              "primary-container": "#9795ff",
+              "tertiary-fixed": "#fd8bca",
+              "tertiary": "#ff9dd1",
+              "inverse-primary": "#4e45e4",
+              "surface-tint": "#a7a5ff",
+              "error": "#ff6e84",
+              "on-tertiary-fixed-variant": "#6d104e",
+              "secondary-container": "#006591",
+              "on-tertiary": "#6c0f4d",
+              "primary-dim": "#645efb",
+              "on-secondary-fixed-variant": "#00567c",
+              "tertiary-dim": "#eb7bba",
+              "on-secondary-container": "#f3f8ff",
+              "on-error": "#490013",
+              "on-primary": "#1c00a0",
+              "on-secondary-fixed": "#003853",
+              "surface-container": "#0f1930",
+              "outline-variant": "#40485d",
+              "secondary-fixed": "#a4d8ff",
+              "surface-container-low": "#091328",
+              "on-tertiary-container": "#5e0042",
+              "error-dim": "#d73357",
+              "surface-container-highest": "#192540",
+              "primary-fixed-dim": "#8885ff",
+              "outline": "#6d758c",
+              "on-primary-container": "#14007e",
+              "on-primary-fixed": "#000000",
+              "on-primary-fixed-variant": "#1a0099",
+              "on-tertiary-fixed": "#360024",
+              "primary": "#a7a5ff",
+              "inverse-on-surface": "#4d556b",
+              "on-surface-variant": "#a3aac4",
+              "surface-bright": "#1f2b49",
+              "primary-fixed": "#9795ff",
+              "error-container": "#a70138",
+              "inverse-surface": "#faf8ff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #060e20;
+            color: #dee5ff;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-panel {
+            background: rgba(25, 37, 64, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-slate-800/50 bg-slate-950/60 backdrop-blur-xl flex flex-col py-6 z-50 font-['Manrope'] tracking-tight shadow-2xl shadow-black/50">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold bg-gradient-to-br from-indigo-300 to-indigo-500 bg-clip-text text-transparent">Kinetic Architect</h1>
+<p class="text-xs text-slate-500 mt-1 uppercase tracking-widest">Homelab Node 01</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 transition-colors hover:bg-slate-800/40" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 transition-colors hover:bg-slate-800/40" href="#">
+<span class="material-symbols-outlined" data-icon="dns">dns</span>
+<span>Services</span>
+</a>
+<!-- Active State for Settings -->
+<a class="flex items-center gap-3 px-6 py-3 bg-indigo-500/10 text-indigo-300 border-r-2 border-indigo-500 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 transition-colors hover:bg-slate-800/40" href="#">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+<span>Logs</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 transition-colors hover:bg-slate-800/40" href="#">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+<span>System</span>
+</a>
+</nav>
+<div class="px-4 mb-6">
+<button class="w-full py-3 bg-gradient-to-br from-primary to-primary-dim text-on-primary font-semibold rounded-lg text-sm transition-transform active:scale-95 shadow-lg shadow-primary/20">
+                New Service
+            </button>
+</div>
+<div class="mt-auto border-t border-slate-800/40 pt-4">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-200 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-40 bg-slate-950/40 backdrop-blur-md flex justify-between items-center px-8 font-['Manrope'] font-semibold">
+<div class="flex items-center gap-8">
+<span class="text-indigo-400 text-lg">System Management</span>
+<nav class="hidden md:flex gap-6 text-sm">
+<a class="text-indigo-400 border-b-2 border-indigo-400 pb-1" href="#">Services</a>
+<a class="text-slate-400 hover:text-slate-200 transition-opacity opacity-80 hover:opacity-100" href="#">Appearance</a>
+<a class="text-slate-400 hover:text-slate-200 transition-opacity opacity-80 hover:opacity-100" href="#">Logs</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<span class="absolute inset-y-0 left-3 flex items-center text-slate-500">
+<span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+</span>
+<input class="bg-surface-container-highest border-none rounded-full py-1.5 pl-10 pr-4 text-xs w-64 focus:ring-1 focus:ring-secondary transition-all" placeholder="Find service..." type="text"/>
+</div>
+<button class="text-slate-400 hover:text-indigo-400 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-400 hover:text-indigo-400 transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 px-12 pb-12 min-h-screen">
+<div class="max-w-6xl mx-auto space-y-10">
+<div class="flex flex-col lg:flex-row gap-8 items-start">
+<!-- Primary Action: Services Management -->
+<section class="flex-1 space-y-6 w-full">
+<div class="flex items-center justify-between">
+<h2 class="text-2xl font-bold font-headline tracking-tight">Active Services</h2>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg text-sm font-semibold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                            Add Service
+                        </button>
+</div>
+<div class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-xl">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-xs font-label text-on-surface-variant uppercase tracking-widest">
+<th class="px-6 py-4 font-semibold">Service Name</th>
+<th class="px-6 py-4 font-semibold">URL / Address</th>
+<th class="px-6 py-4 font-semibold">Category</th>
+<th class="px-6 py-4 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/5">
+<tr class="hover:bg-surface-container/50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="cloud">cloud</span>
+</div>
+<span class="text-sm font-medium">Nextcloud</span>
+</div>
+</td>
+<td class="px-6 py-5 text-sm font-mono text-slate-500">cloud.local:8080</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-surface-container-highest text-[10px] text-on-surface-variant font-bold uppercase">Storage</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-slate-400 hover:text-indigo-400 transition-colors" title="Edit Service">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-error-container/20 rounded-lg text-slate-400 hover:text-error transition-colors" title="Delete Service">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+</div>
+<span class="text-sm font-medium">Pi-hole</span>
+</div>
+</td>
+<td class="px-6 py-5 text-sm font-mono text-slate-500">dns.architect:80</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-surface-container-highest text-[10px] text-on-surface-variant font-bold uppercase">Network</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-slate-400 hover:text-indigo-400 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-error-container/20 rounded-lg text-slate-400 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="tv">tv</span>
+</div>
+<span class="text-sm font-medium">Plex Media</span>
+</div>
+</td>
+<td class="px-6 py-5 text-sm font-mono text-slate-500">192.168.1.50:32400</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 rounded-full bg-surface-container-highest text-[10px] text-on-surface-variant font-bold uppercase">Media</span>
+</td>
+<td class="px-6 py-5 text-right">
+<div class="flex justify-end gap-2">
+<button class="p-2 hover:bg-surface-container-high rounded-lg text-slate-400 hover:text-indigo-400 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="edit">edit</span>
+</button>
+<button class="p-2 hover:bg-error-container/20 rounded-lg text-slate-400 hover:text-error transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="delete">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="bg-surface-container-lowest/30 p-4 text-center border-t border-outline-variant/10">
+<button class="text-xs font-label uppercase tracking-widest text-on-surface-variant hover:text-on-surface transition-colors flex items-center justify-center gap-2 mx-auto">
+<span>Show All 12 Services</span>
+<span class="material-symbols-outlined text-sm" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Sidebar Secondary: Appearance -->
+<aside class="w-full lg:w-80 space-y-6">
+<h2 class="text-2xl font-bold font-headline tracking-tight">Appearance</h2>
+<div class="glass-panel p-6 rounded-xl border border-outline-variant/10 shadow-xl space-y-8">
+<div class="space-y-4">
+<label class="text-xs font-label text-on-surface-variant uppercase tracking-wider block">Theme Mode</label>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center gap-1 p-3 rounded-lg bg-surface-container-highest text-slate-400 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="light_mode">light_mode</span>
+<span class="text-[10px] font-bold uppercase">Light</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 p-3 rounded-lg bg-indigo-500 text-white shadow-lg shadow-indigo-500/20">
+<span class="material-symbols-outlined text-lg" data-icon="dark_mode">dark_mode</span>
+<span class="text-[10px] font-bold uppercase">Dark</span>
+</button>
+</div>
+</div>
+<div class="space-y-4">
+<label class="text-xs font-label text-on-surface-variant uppercase tracking-wider block">Accent Color</label>
+<div class="flex flex-wrap gap-3">
+<button class="w-8 h-8 rounded-full bg-primary ring-2 ring-offset-4 ring-offset-surface ring-primary transition-transform hover:scale-110"></button>
+<button class="w-8 h-8 rounded-full bg-secondary transition-transform hover:scale-110"></button>
+<button class="w-8 h-8 rounded-full bg-tertiary transition-transform hover:scale-110"></button>
+<button class="w-8 h-8 rounded-full bg-emerald-400 transition-transform hover:scale-110"></button>
+<button class="w-8 h-8 rounded-full bg-amber-400 transition-transform hover:scale-110"></button>
+</div>
+</div>
+</div>
+<!-- Helpful Node Tip -->
+<div class="p-5 rounded-xl border border-indigo-500/20 bg-indigo-500/5">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-indigo-400" data-icon="info">info</span>
+<div class="space-y-1">
+<p class="text-xs font-bold text-indigo-300 uppercase tracking-tight">Quick Tip</p>
+<p class="text-xs text-on-surface-variant leading-relaxed">Changes to services are reflected instantly across all connected dashboard panels.</p>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<!-- Footer Meta -->
+<div class="pt-12 border-t border-outline-variant/10 flex flex-col md:flex-row justify-between items-center text-xs text-on-surface-variant/60 gap-4">
+<div class="flex items-center gap-6">
+<p>© 2024 Kinetic Homelab Systems</p>
+<a class="hover:text-primary transition-colors" href="#">API Docs</a>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary-container"></span>
+<span>All services running within normal parameters</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>

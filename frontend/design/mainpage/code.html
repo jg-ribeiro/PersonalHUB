@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Homelab Architect | Command Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-bright": "#1f2b49",
+              "surface-container-low": "#091328",
+              "on-primary": "#1c00a0",
+              "primary-fixed-dim": "#8885ff",
+              "tertiary": "#ff9dd1",
+              "surface-container": "#0f1930",
+              "on-primary-container": "#14007e",
+              "on-tertiary-fixed": "#360024",
+              "on-secondary-container": "#f3f8ff",
+              "error-dim": "#d73357",
+              "on-secondary-fixed-variant": "#00567c",
+              "secondary-dim": "#17a8ec",
+              "tertiary-fixed": "#fd8bca",
+              "on-tertiary": "#6c0f4d",
+              "surface": "#060e20",
+              "outline": "#6d758c",
+              "surface-variant": "#192540",
+              "tertiary-dim": "#eb7bba",
+              "inverse-surface": "#faf8ff",
+              "on-surface-variant": "#a3aac4",
+              "surface-container-lowest": "#000000",
+              "secondary": "#34b5fa",
+              "tertiary-container": "#fa88c8",
+              "primary": "#a7a5ff",
+              "on-primary-fixed": "#000000",
+              "on-tertiary-fixed-variant": "#6d104e",
+              "on-background": "#dee5ff",
+              "primary-container": "#9795ff",
+              "on-primary-fixed-variant": "#1a0099",
+              "background": "#060e20",
+              "secondary-container": "#006591",
+              "secondary-fixed": "#a4d8ff",
+              "on-tertiary-container": "#5e0042",
+              "surface-container-highest": "#192540",
+              "on-secondary": "#003047",
+              "on-error-container": "#ffb2b9",
+              "primary-dim": "#645efb",
+              "surface-tint": "#a7a5ff",
+              "outline-variant": "#40485d",
+              "surface-container-high": "#141f38",
+              "inverse-on-surface": "#4d556b",
+              "error-container": "#a70138",
+              "surface-dim": "#060e20",
+              "secondary-fixed-dim": "#81ccff",
+              "primary-fixed": "#9795ff",
+              "inverse-primary": "#4e45e4",
+              "on-surface": "#dee5ff",
+              "on-secondary-fixed": "#003853",
+              "tertiary-fixed-dim": "#ee7ebc",
+              "error": "#ff6e84",
+              "on-error": "#490013"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-sidebar {
+            background: rgba(9, 19, 40, 0.6);
+            backdrop-filter: blur(20px);
+        }
+        /* Custom scrollbar for technical feel */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #060e20; }
+        ::-webkit-scrollbar-thumb { background: #40485d; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Sidebar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 overflow-y-auto hidden md:flex flex-col py-6 glass-sidebar shadow-2xl shadow-black/40 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-bold bg-gradient-to-br from-[#a7a5ff] to-[#645efb] bg-clip-text text-transparent font-headline tracking-tighter" style="">KINETIC</h1>
+<p class="font-['Manrope'] font-semibold tracking-wide uppercase text-[11px] text-slate-400" style="">Architect OS</p>
+</div>
+<nav class="flex-1 space-y-1">
+<button class="w-full flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#a7a5ff]/10 to-transparent text-[#a7a5ff] border-r-2 border-[#a7a5ff] font-['Manrope'] font-semibold tracking-wide uppercase text-[11px] transition-all" id="nav-all" onclick="filterCards('All')" style="">
+<span class="material-symbols-outlined" style="">dashboard</span>
+                All Systems
+            </button>
+<button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" id="nav-infrastructure" onclick="filterCards('Infrastructure')" style="">
+<span class="material-symbols-outlined" style="">dns</span>
+                Infrastructure
+            </button>
+<button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" id="nav-media" onclick="filterCards('Media')" style="">
+<span class="material-symbols-outlined" style="">movie</span>
+                Media
+            </button>
+<button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" id="nav-databases" onclick="filterCards('Databases')" style="">
+<span class="material-symbols-outlined" style="">database</span>
+                Databases
+            </button>
+<button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" id="nav-network" onclick="filterCards('Network')" style="">
+<span class="material-symbols-outlined" style="">lan</span>
+                Network
+            </button>
+<button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" id="nav-security" onclick="filterCards('Security')" style="">
+<span class="material-symbols-outlined" style="">security</span>
+                Security
+            </button>
+</nav>
+<div class="px-6 pt-6 border-t border-outline-variant/20 mt-auto">
+<button class="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" style="">
+<span class="material-symbols-outlined" style="">settings</span>
+                Settings
+            </button>
+<button class="w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" style="">
+<span class="material-symbols-outlined" style="">terminal</span>
+                Logs
+            </button>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-0 md:ml-64 min-h-screen">
+<!-- Top Navigation -->
+<header class="sticky top-0 z-40 bg-slate-950/40 backdrop-blur-md flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm" style="">search</span>
+<input class="bg-surface-container-highest border-none rounded-xl pl-10 pr-4 py-2 text-sm w-full focus:ring-2 focus:ring-secondary/50 outline-none text-on-surface placeholder:text-on-surface-variant/50" placeholder="Search infrastructure..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4 ml-4">
+<button class="p-2 text-slate-400 hover:text-secondary transition-colors" id="theme-toggle" onclick="toggleTheme()" style="">
+<span class="material-symbols-outlined" id="theme-icon" style="">light_mode</span>
+</button>
+<button class="p-2 text-slate-400 hover:text-secondary transition-colors relative" style="">
+<span class="material-symbols-outlined" style="">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-tertiary rounded-full"></span>
+</button>
+<div class="h-8 w-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary-container font-bold text-xs" style="">
+                    AD
+                </div>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="px-6 py-10">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h2 class="text-4xl font-extrabold font-headline tracking-tight text-on-background" style="">Homelab Architect</h2>
+<p class="text-on-surface-variant mt-2 max-w-xl" style="">Unified control plane for your local infrastructure. Real-time monitoring and service orchestration from a single node.</p>
+</div>
+<div class="flex gap-3">
+<div class="bg-surface-container rounded-xl p-4 flex flex-col items-center justify-center min-w-[100px] border-b-2 border-secondary">
+<span class="text-xs font-bold uppercase tracking-widest text-secondary mb-1" style="">Status</span>
+<span class="text-xl font-bold" style="">Online</span>
+</div>
+<div class="bg-surface-container rounded-xl p-4 flex flex-col items-center justify-center min-w-[100px] border-b-2 border-primary">
+<span class="text-xs font-bold uppercase tracking-widest text-primary mb-1" style="">Nodes</span>
+<span class="text-xl font-bold" style="">12</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid of Service Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="service-grid">
+<a class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative" href="https://192.168.1.100:8006" style="" target="_blank">
+<div class="p-6">
+<div class="flex justify-between items-start mb-8">
+<div class="p-3 bg-surface-container-highest rounded-lg text-primary group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">dns</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Latency</span>
+<span class="text-xs font-mono text-secondary">2ms</span>
+</div>
+</div>
+<h3 class="text-xl font-bold font-headline mb-1 text-on-surface" style="">Proxmox</h3>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-tight" style="">Infrastructure</p>
+<div class="mt-6 flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(52,181,250,0.4)]"></div>
+<span class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Active</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest h-12 px-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-[10px] text-on-surface-variant font-mono truncate max-w-[150px]">https://192.168.1.100:8006</span>
+<span class="material-symbols-outlined text-sm text-secondary" style="">open_in_new</span>
+</div>
+</a>
+<a class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative" href="http://192.168.1.50:32400" style="" target="_blank">
+<div class="p-6">
+<div class="flex justify-between items-start mb-8">
+<div class="p-3 bg-surface-container-highest rounded-lg text-primary group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">movie</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Latency</span>
+<span class="text-xs font-mono text-secondary">14ms</span>
+</div>
+</div>
+<h3 class="text-xl font-bold font-headline mb-1 text-on-surface" style="">Plex</h3>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-tight" style="">Media</p>
+<div class="mt-6 flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(52,181,250,0.4)]"></div>
+<span class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Active</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest h-12 px-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-[10px] text-on-surface-variant font-mono truncate max-w-[150px]">http://192.168.1.50:32400</span>
+<span class="material-symbols-outlined text-sm text-secondary" style="">open_in_new</span>
+</div>
+</a>
+<a class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative" href="http://192.168.1.60:3306" style="" target="_blank">
+<div class="p-6">
+<div class="flex justify-between items-start mb-8">
+<div class="p-3 bg-surface-container-highest rounded-lg text-primary group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">database</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Latency</span>
+<span class="text-xs font-mono text-secondary">0.5ms</span>
+</div>
+</div>
+<h3 class="text-xl font-bold font-headline mb-1 text-on-surface" style="">MariaDB</h3>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-tight" style="">Databases</p>
+<div class="mt-6 flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-outline shadow-[0_0_8px_rgba(52,181,250,0.4)]"></div>
+<span class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Idle</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest h-12 px-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-[10px] text-on-surface-variant font-mono truncate max-w-[150px]">http://192.168.1.60:3306</span>
+<span class="material-symbols-outlined text-sm text-secondary" style="">open_in_new</span>
+</div>
+</a>
+<a class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative" href="http://192.168.1.10:80/admin" style="" target="_blank">
+<div class="p-6">
+<div class="flex justify-between items-start mb-8">
+<div class="p-3 bg-surface-container-highest rounded-lg text-primary group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">lan</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Latency</span>
+<span class="text-xs font-mono text-secondary">1ms</span>
+</div>
+</div>
+<h3 class="text-xl font-bold font-headline mb-1 text-on-surface" style="">Pi-hole</h3>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-tight" style="">Network</p>
+<div class="mt-6 flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(52,181,250,0.4)]"></div>
+<span class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Active</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest h-12 px-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-[10px] text-on-surface-variant font-mono truncate max-w-[150px]">http://192.168.1.10:80/admin</span>
+<span class="material-symbols-outlined text-sm text-secondary" style="">open_in_new</span>
+</div>
+</a>
+<a class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative" href="https://192.168.1.20:8443" style="" target="_blank">
+<div class="p-6">
+<div class="flex justify-between items-start mb-8">
+<div class="p-3 bg-surface-container-highest rounded-lg text-primary group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">security</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Latency</span>
+<span class="text-xs font-mono text-secondary">5ms</span>
+</div>
+</div>
+<h3 class="text-xl font-bold font-headline mb-1 text-on-surface" style="">Vaultwarden</h3>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-tight" style="">Security</p>
+<div class="mt-6 flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-secondary shadow-[0_0_8px_rgba(52,181,250,0.4)]"></div>
+<span class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Active</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest h-12 px-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-[10px] text-on-surface-variant font-mono truncate max-w-[150px]">https://192.168.1.20:8443</span>
+<span class="material-symbols-outlined text-sm text-secondary" style="">open_in_new</span>
+</div>
+</a>
+<a class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative" href="http://192.168.1.15:8123" style="" target="_blank">
+<div class="p-6">
+<div class="flex justify-between items-start mb-8">
+<div class="p-3 bg-surface-container-highest rounded-lg text-primary group-hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-3xl" style="">home</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Latency</span>
+<span class="text-xs font-mono text-secondary">8ms</span>
+</div>
+</div>
+<h3 class="text-xl font-bold font-headline mb-1 text-on-surface" style="">Home Assistant</h3>
+<p class="text-xs text-on-surface-variant font-medium uppercase tracking-tight" style="">Infrastructure</p>
+<div class="mt-6 flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-outline shadow-[0_0_8px_rgba(52,181,250,0.4)]"></div>
+<span class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">Standby</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest h-12 px-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="text-[10px] text-on-surface-variant font-mono truncate max-w-[150px]">http://192.168.1.15:8123</span>
+<span class="material-symbols-outlined text-sm text-secondary" style="">open_in_new</span>
+</div>
+</a>
+</div>
+</section>
+<!-- System Visualizer (Decorative/Informational) -->
+</main>
+<!-- Mobile Bottom Nav -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-highest/80 backdrop-blur-xl flex justify-around items-center py-4 z-50">
+<button class="text-secondary" onclick="filterCards('All')" style=""><span class="material-symbols-outlined" style="">dashboard</span></button>
+<button class="text-on-surface-variant" onclick="filterCards('Infrastructure')" style=""><span class="material-symbols-outlined" style="">dns</span></button>
+<button class="text-on-surface-variant" onclick="filterCards('Network')" style=""><span class="material-symbols-outlined" style="">lan</span></button>
+<button class="text-on-surface-variant" style=""><span class="material-symbols-outlined" style="">settings</span></button>
+</nav>
+<script>
+        const services = [
+            { name: "Proxmox", url: "https://192.168.1.100:8006", icon: "dns", category: "Infrastructure", latency: "2ms", status: "Active" },
+            { name: "Plex", url: "http://192.168.1.50:32400", icon: "movie", category: "Media", latency: "14ms", status: "Active" },
+            { name: "MariaDB", url: "http://192.168.1.60:3306", icon: "database", category: "Databases", latency: "0.5ms", status: "Idle" },
+            { name: "Pi-hole", url: "http://192.168.1.10:80/admin", icon: "lan", category: "Network", latency: "1ms", status: "Active" },
+            { name: "Vaultwarden", url: "https://192.168.1.20:8443", icon: "security", category: "Security", latency: "5ms", status: "Active" },
+            { name: "Home Assistant", url: "http://192.168.1.15:8123", icon: "home", category: "Infrastructure", latency: "8ms", status: "Standby" }
+        ];
+
+        function renderCards(data) {
+            const grid = document.getElementById('service-grid');
+            grid.innerHTML = data.map(service => `
+                <a href="${service.url}" target="_blank" class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative">
+                    <div class="p-6">
+                        <div class="flex justify-between items-start mb-8">
+                            <div class="p-3 bg-surface-container-highest rounded-lg text-primary group-hover:text-secondary transition-colors">
+                                <span class="material-symbols-outlined text-3xl">${service.icon}</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">Latency</span>
+                                <span class="text-xs font-mono text-secondary">${service.latency}</span>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-xl font-bold font-headline mb-1 text-on-surface">${service.name}</h3>
+                        <p class="text-xs text-on-surface-variant font-medium uppercase tracking-tight">${service.category}</p>
+                        
+                        <div class="mt-6 flex items-center gap-2">
+                            <div class="h-2 w-2 rounded-full ${service.status === 'Active' ? 'bg-secondary' : 'bg-outline'} shadow-[0_0_8px_rgba(52,181,250,0.4)]"></div>
+                            <span class="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant">${service.status}</span>
+                        </div>
+                    </div>
+                    <div class="bg-surface-container-lowest h-12 px-6 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+                         <span class="text-[10px] text-on-surface-variant font-mono truncate max-w-[150px]">${service.url}</span>
+                         <span class="material-symbols-outlined text-sm text-secondary">open_in_new</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function filterCards(category) {
+            // Update UI Active State
+            const buttons = document.querySelectorAll('aside nav button');
+            buttons.forEach(btn => {
+                btn.classList.remove('bg-gradient-to-r', 'from-[#a7a5ff]/10', 'to-transparent', 'text-[#a7a5ff]', 'border-r-2', 'border-[#a7a5ff]');
+                btn.classList.add('text-slate-400');
+            });
+            
+            const activeBtn = document.getElementById(`nav-${category.toLowerCase()}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('bg-gradient-to-r', 'from-[#a7a5ff]/10', 'to-transparent', 'text-[#a7a5ff]', 'border-r-2', 'border-[#a7a5ff]');
+            }
+
+            if (category === 'All') {
+                renderCards(services);
+            } else {
+                const filtered = services.filter(s => s.category === category);
+                renderCards(filtered);
+            }
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            if (html.classList.contains('dark')) {
+                html.classList.remove('dark');
+                icon.innerText = 'dark_mode';
+            } else {
+                html.classList.add('dark');
+                icon.innerText = 'light_mode';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCards(services);
+        });
+    </script>
+</body></html>
