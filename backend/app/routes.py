@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from app import db
 from models import HubApp
+import base64
 
 main = Blueprint("main", __name__)
 
@@ -24,7 +25,15 @@ def create_app():
     elif 'name' not in data or 'link' not in data:
         return jsonify({"error": "Campos 'name' e 'link' são obrigatórios"}), 400
     
-    newapp = HubApp(name=data['name'], description=data['description'], link=data['link'], icon=data.get('icon', None))
+    newapp = HubApp(
+        name=data['name'],
+        description=data['description'],
+        link=data['link']
+    )
+    
+    if 'icon' in data and data['icon']:
+        newapp.icon = base64.b64decode(data['icon'])
+    
     db.session.add(newapp)
     db.session.commit()
     return jsonify({"msg": "app created", "app_id": newapp.id}), 201
@@ -37,7 +46,7 @@ def list_apps():
         "name": app.name,
         "description": app.description,
         "link": app.link,
-        "icon": app.icon.hex() if app.icon else None
+        "icon": base64.b64encode(app.icon).decode() if app.icon else None
     } for app in apps]), 200
 
 
@@ -62,7 +71,7 @@ def get_app(app):
         "name": app.name,
         "description": app.description,
         "link": app.link,
-        "icon": app.icon.hex() if app.icon else None
+        "icon": base64.b64encode(app.icon).decode() if app.icon else None
     }), 200
 
 
@@ -75,8 +84,8 @@ def update_app(app):
     app.name = data.get('name', app.name)
     app.description = data.get('description', app.description)
     app.link = data.get('link', app.link)
-    if 'icon' in data:
-        app.icon = data['icon']
+    if 'icon' in data and data['icon']:
+        app.icon = base64.b64decode(data['icon'])
     
     db.session.commit()
     return jsonify({"msg": "app updated", "app_id": app.id}), 200
