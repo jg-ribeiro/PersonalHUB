@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from app import db
-from models import HubApp
+from .models import HubApp
 import base64
 
 main = Blueprint("main", __name__)
@@ -27,7 +27,7 @@ def create_app():
     
     newapp = HubApp(
         name=data['name'],
-        description=data['description'],
+        description=data.get('description', None),
         link=data['link']
     )
     

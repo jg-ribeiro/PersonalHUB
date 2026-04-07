@@ -43,6 +43,7 @@
         /* Sidebar collapsed state */
         #sidebar.collapsed { width: 80px; }
         #sidebar.collapsed .sidebar-text { display: none; }
+        #sidebar.collapsed .sidebar-collapsed-text { display: inline; }
         #sidebar.collapsed .sidebar-header { padding-left: 0; padding-right: 0; display: flex; justify-content: center; }
         #sidebar.collapsed .sidebar-header h1 { font-size: 1.25rem; }
         #sidebar.collapsed .sidebar-header p { display: none; }
@@ -58,7 +59,10 @@
     <!-- Sidebar -->
     <aside id="sidebar" class="h-screen w-64 fixed left-0 top-0 hidden md:flex flex-col py-6 glass-sidebar border-r border-outline-variant/10 z-50 transition-all duration-300">
         <div class="px-6 mb-10 sidebar-header relative">
-            <h1 class="text-xl font-bold bg-gradient-to-br from-[#a7a5ff] to-[#645efb] bg-clip-text text-transparent font-headline tracking-tighter">HOMELAB</h1>
+            <h1 class="text-xl font-bold bg-gradient-to-br from-[#a7a5ff] to-[#645efb] bg-clip-text text-transparent font-headline tracking-tighter">
+                <span class="sidebar-text">HOMELAB</span>
+                <span class="sidebar-collapsed-text hidden">H</span>
+            </h1>
             <p class="sidebar-text text-[11px] text-slate-400 uppercase tracking-widest">Settings Mode</p>
 
             <button id="sidebar-toggle" class="absolute -right-3 top-0 bg-surface-container-highest text-primary rounded-full p-1 shadow-lg hover:text-secondary transition-colors border border-outline-variant/20">
