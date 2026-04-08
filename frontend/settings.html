@@ -91,7 +91,7 @@
             <div class="flex gap-3">
                 <button id="manage-categories-btn" class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-highest text-primary rounded-lg text-sm font-bold hover:bg-surface-variant transition-all border border-outline-variant/20">
                     <span class="material-symbols-outlined text-sm">category</span>
-                    Manage Sectors
+                    Manage Categories
                 </button>
                 <button id="add-service-btn" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20">
                     <span class="material-symbols-outlined text-sm">add</span>
@@ -178,13 +178,13 @@
                 <div id="custom-icon-group" class="hidden">
                     <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Upload Icon (SVG/PNG)</label>
                     <div class="flex items-center gap-4">
+                        <label for="custom-icon-upload" class="cursor-pointer px-4 py-2 bg-surface-container-highest hover:bg-surface-variant rounded-lg text-xs font-bold transition-colors border border-outline-variant/20">
+                            Choose File
+                        </label>
                         <div id="icon-preview" class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant/20">
                             <span class="material-symbols-outlined text-on-surface-variant">image</span>
                         </div>
                         <input type="file" id="custom-icon-upload" accept=".svg,.png" class="hidden">
-                        <label for="custom-icon-upload" class="cursor-pointer px-4 py-2 bg-surface-container-highest hover:bg-surface-variant rounded-lg text-xs font-bold transition-colors border border-outline-variant/20">
-                            Choose File
-                        </label>
                         <span id="file-name" class="text-xs text-on-surface-variant truncate max-w-[150px]">No file chosen</span>
                     </div>
                     <input type="hidden" id="custom-icon-data">

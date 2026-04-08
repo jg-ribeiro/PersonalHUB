@@ -106,38 +106,25 @@
 </head>
 <body class="bg-background text-on-background min-h-screen">
     <!-- Sidebar Shell -->
-    <aside id="sidebar" class="h-screen w-64 fixed left-0 top-0 overflow-y-auto hidden md:flex flex-col py-6 glass-sidebar shadow-2xl shadow-black/40 z-50 transition-all duration-300">
+    <aside id="sidebar" class="h-screen w-64 fixed left-0 top-0 hidden md:flex flex-col py-6 glass-sidebar border-r border-outline-variant/10 z-50 transition-all duration-300">
         <div class="px-6 mb-10 sidebar-header relative">
             <h1 class="text-xl font-bold bg-gradient-to-br from-[#a7a5ff] to-[#645efb] bg-clip-text text-transparent font-headline tracking-tighter">
                 <span class="sidebar-text">HOMELAB</span>
                 <span class="sidebar-collapsed-text hidden">H</span>
             </h1>
-            <p class="sidebar-text font-['Manrope'] font-semibold tracking-wide uppercase text-[11px] text-slate-400">Architect Hub</p>
+            <p class="sidebar-text text-[11px] text-slate-400 uppercase tracking-widest">Architect Hub</p>
             
             <button id="sidebar-toggle" class="absolute -right-3 top-0 bg-surface-container-highest text-primary rounded-full p-1 shadow-lg hover:text-secondary transition-colors border border-outline-variant/20">
                 <span class="material-symbols-outlined text-sm" id="toggle-icon">chevron_left</span>
             </button>
         </div>
-        <nav class="flex-1 space-y-1" id="category-nav">
-            <button class="w-full flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-[#a7a5ff]/10 to-transparent text-[#a7a5ff] border-r-2 border-[#a7a5ff] font-['Manrope'] font-semibold tracking-wide uppercase text-[11px] transition-all" data-category="All" id="nav-all">
-                <span class="material-symbols-outlined">dashboard</span>
-                <span class="sidebar-text">All Systems</span>
-            </button>
-            <button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" data-category="Desenvolvimento" id="nav-desenvolvimento">
-                <span class="material-symbols-outlined">code</span>
-                <span class="sidebar-text">Desenvolvimento</span>
-            </button>
-            <button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" data-category="Infraestrutura" id="nav-infraestrutura">
-                <span class="material-symbols-outlined">database</span>
-                <span class="sidebar-text">Infraestrutura</span>
-            </button>
-            <button class="w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" data-category="IA" id="nav-ia">
-                <span class="material-symbols-outlined">psychology</span>
-                <span class="sidebar-text">IA</span>
-            </button>
+        
+        <nav class="flex-1 space-y-1 overflow-y-auto scrollbar-hide" id="category-nav">
+            <!-- Dynamically populated via script.js -->
         </nav>
-        <div class="px-6 pt-6 border-t border-outline-variant/20 mt-auto">
-            <a href="settings.html" class="settings-link w-full flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]">
+
+        <div class="mt-auto pt-6 border-t border-outline-variant/10">
+            <a href="settings.html" class="settings-link w-full flex items-center gap-3 px-6 py-3 text-slate-400 hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]">
                 <span class="material-symbols-outlined">settings</span>
                 <span class="sidebar-text">Settings</span>
             </a>

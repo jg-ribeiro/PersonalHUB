@@ -277,8 +277,8 @@ manageCategoriesBtn.addEventListener('click', () => {
     const isManaging = categoriesSection.classList.toggle('hidden');
     servicesSection.classList.toggle('hidden', !isManaging);
     manageCategoriesBtn.innerHTML = !isManaging 
-        ? `<span class="material-symbols-outlined text-sm">view_list</span> Manage Services`
-        : `<span class="material-symbols-outlined text-sm">category</span> Manage Sectors`;
+        ? `<span class="material-symbols-outlined text-sm">view_list</span> Manage Apps`
+        : `<span class="material-symbols-outlined text-sm">category</span> Manage Categories`;
 });
 
 // Render Categories Table
