@@ -88,13 +88,20 @@
                 <h2 class="text-3xl font-extrabold font-headline tracking-tight">Active Services</h2>
                 <p class="text-on-surface-variant text-sm mt-1">Manage shortcuts and redirection nodes.</p>
             </div>
-            <button id="add-service-btn" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20">
-                <span class="material-symbols-outlined text-sm">add</span>
-                Add New Service
-            </button>
+            <div class="flex gap-3">
+                <button id="manage-categories-btn" class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-highest text-primary rounded-lg text-sm font-bold hover:bg-surface-variant transition-all border border-outline-variant/20">
+                    <span class="material-symbols-outlined text-sm">category</span>
+                    Manage Sectors
+                </button>
+                <button id="add-service-btn" class="flex items-center gap-2 px-5 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20">
+                    <span class="material-symbols-outlined text-sm">add</span>
+                    Add New Service
+                </button>
+            </div>
         </header>
 
-        <section class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
+        <!-- Services Management Section -->
+        <section id="services-section" class="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-surface-container text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
@@ -109,9 +116,31 @@
                 </tbody>
             </table>
         </section>
+
+        <!-- Categories Management Section -->
+        <section id="categories-section" class="hidden bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant/10 shadow-2xl">
+            <div class="p-6 flex justify-between items-center border-b border-outline-variant/10">
+                <h3 class="font-headline font-bold text-lg">System Sectors</h3>
+                <button id="add-category-btn" class="px-4 py-2 bg-secondary text-on-secondary rounded-lg text-xs font-bold hover:opacity-90 transition-all">
+                    Add Sector
+                </button>
+            </div>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-surface-container text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
+                        <th class="px-6 py-4">Sector Name</th>
+                        <th class="px-6 py-4">Description</th>
+                        <th class="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="categories-table-body" class="divide-y divide-outline-variant/5">
+                    <!-- Loaded via JS -->
+                </tbody>
+            </table>
+        </section>
     </main>
 
-    <!-- Modal Form -->
+    <!-- Modal Form for Apps -->
     <div id="service-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
         <div class="bg-surface-container-high w-full max-w-lg rounded-2xl shadow-2xl border border-outline-variant/20 p-8">
             <h3 id="modal-title" class="text-2xl font-bold font-headline mb-6">Add Service</h3>
@@ -129,11 +158,7 @@
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Category</label>
                         <select id="category" class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 outline-none text-on-surface">
-                            <option value="Desenvolvimento">Desenvolvimento</option>
-                            <option value="Infraestrutura">Infraestrutura</option>
-                            <option value="IA">IA</option>
-                            <option value="Media">Media</option>
-                            <option value="Network">Network</option>
+                            <!-- Populated via JS -->
                         </select>
                     </div>
                     <div>
@@ -167,6 +192,28 @@
                 <div class="flex justify-end gap-3 mt-8">
                     <button type="button" id="close-modal" class="px-6 py-2.5 text-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors">Cancel</button>
                     <button type="submit" class="px-6 py-2.5 bg-primary text-on-primary rounded-lg text-sm font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/20">Save Service</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Form for Categories -->
+    <div id="category-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div class="bg-surface-container-high w-full max-w-md rounded-2xl shadow-2xl border border-outline-variant/20 p-8">
+            <h3 id="category-modal-title" class="text-2xl font-bold font-headline mb-6">Add Sector</h3>
+            <form id="category-form" class="space-y-5">
+                <input type="hidden" id="category-id">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Sector Name</label>
+                    <input type="text" id="cat-name" required class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-secondary/50 outline-none text-on-surface">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Description</label>
+                    <textarea id="cat-description" class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-secondary/50 outline-none text-on-surface resize-none h-24"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 mt-8">
+                    <button type="button" id="close-category-modal" class="px-6 py-2.5 text-sm font-bold text-on-surface-variant hover:text-on-surface transition-colors">Cancel</button>
+                    <button type="submit" class="px-6 py-2.5 bg-secondary text-on-secondary rounded-lg text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-secondary/20">Save Sector</button>
                 </div>
             </form>
         </div>

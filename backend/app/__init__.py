@@ -1,4 +1,5 @@
-from flask import Flask
+from flask import Flask, jsonify
+from flask_cors import CORS
 from .extensions import db, create_db_url
 from dotenv import load_dotenv
 import os
@@ -21,10 +22,18 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Inicializa extensões
+    CORS(app)
     db.init_app(app)
 
     # Registrar rotas / blueprints
-    from .routes import main
-    app.register_blueprint(main)
+    from .apps import apps_bp
+    from .categories import categories_bp
+
+    app.register_blueprint(apps_bp, url_prefix="/apps")
+    app.register_blueprint(categories_bp, url_prefix="/categories")
+
+    @app.route("/")
+    def home():
+        return jsonify({"msg": "ok"})
 
     return app

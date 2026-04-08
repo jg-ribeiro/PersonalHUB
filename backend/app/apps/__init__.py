@@ -1,15 +1,11 @@
 from flask import Blueprint, jsonify, request
 from app import db
-from .models import HubApp
+from app.models import HubApp, Category
 import base64
 
-main = Blueprint("main", __name__)
+apps_bp = Blueprint("apps", __name__)
 
-@main.route("/")
-def home():
-    return jsonify({"msg": "ok"})
-
-@main.route("/app", methods=["GET", "POST"])
+@apps_bp.route("/", methods=["GET", "POST"])
 def app_operations():
     if request.method == "POST":
         return create_app()
@@ -40,17 +36,33 @@ def create_app():
 
 
 def list_apps():
-    apps = HubApp.query.all()
-    return jsonify([{
-        "id": app.id,
-        "name": app.name,
-        "description": app.description,
-        "link": app.link,
-        "icon": base64.b64encode(app.icon).decode() if app.icon else None
-    } for app in apps]), 200
+    categs = Category.query.all()
+
+    result = []
+
+    for categ in categs:
+        apps_list = []
+
+        for app in categ.apps:
+            apps_list.append({
+                "id": app.id,
+                "name": app.name,
+                "description": app.description,
+                "link": app.link,
+                "icon": base64.b64encode(app.icon).decode() if app.icon else None
+            })
+
+        result.append({
+            "id": categ.id,
+            "name": categ.name,
+            "description": categ.description,
+            "apps": apps_list
+        })
+
+    return jsonify(result), 200
 
 
-@main.route("/app/<int:app_id>", methods=["GET", "PUT", "DELETE"])
+@apps_bp.route("/<int:app_id>", methods=["GET", "PUT", "DELETE"])
 def app_detail(app_id):
     app = HubApp.query.get(app_id)
     

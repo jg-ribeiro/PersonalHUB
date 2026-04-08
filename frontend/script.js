@@ -13,26 +13,125 @@ const sidebarToggle = document.getElementById('sidebar-toggle');
 const toggleIcon = document.getElementById('toggle-icon');
 const mainContent = document.getElementById('main-content');
 
+const API_URL = 'http://localhost:8080/apps';
+const CATEGORIES_URL = 'http://localhost:8080/categories';
+
 // Initialize
 async function init() {
     try {
-        const savedServices = localStorage.getItem('homelab_services');
-        if (savedServices) {
-            services = JSON.parse(savedServices);
-        } else {
-            const response = await fetch('mock.json');
-            services = await response.json();
-            localStorage.setItem('homelab_services', JSON.stringify(services));
-        }
+        serviceGrid.innerHTML = `
+            <div class="col-span-full flex flex-col items-center justify-center py-20 opacity-50">
+                <span class="material-symbols-outlined text-5xl animate-spin mb-4">progress_activity</span>
+                <p class="font-headline font-bold tracking-widest uppercase text-xs">Loading Command Center...</p>
+            </div>
+        `;
+
+        const [appsResponse, categoriesResponse] = await Promise.all([
+            fetch(API_URL),
+            fetch(CATEGORIES_URL)
+        ]);
+
+        if (!appsResponse.ok || !categoriesResponse.ok) throw new Error('API communication failure');
+
+        const appsData = await appsResponse.json();
+        const categoriesData = await categoriesResponse.json();
+        
+        // Flatten apps from categories for search/stats but keep category names
+        services = [];
+        appsData.forEach(cat => {
+            cat.apps.forEach(app => {
+                const decodedIcon = app.icon ? atob(app.icon) : 'apps';
+                services.push({
+                    id: app.id,
+                    name: app.name,
+                    url: app.link,
+                    category: cat.name,
+                    categoryId: cat.id,
+                    icon: decodedIcon,
+                    iconType: (decodedIcon.length > 25) ? 'custom' : 'material',
+                    customIcon: (decodedIcon.length > 25) ? `data:image/png;base64,${app.icon}` : null,
+                    status: 'Active',
+                    latency: Math.floor(Math.random() * 50) + 'ms'
+                });
+            });
+        });
+        
+        renderDynamicCategories(categoriesData);
         renderCards(services);
-        updateStats();
+        //updateStats(categoriesData.length);
         initTheme();
         initSidebar();
-        updateCategories();
     } catch (error) {
         console.error('Error loading services:', error);
-        serviceGrid.innerHTML = `<p class="text-error col-span-full text-center">Failed to load services.</p>`;
+        serviceGrid.innerHTML = `
+            <div class="col-span-full bg-error/10 border border-error/20 rounded-2xl p-12 text-center">
+                <span class="material-symbols-outlined text-error text-5xl mb-4">cloud_off</span>
+                <h3 class="text-xl font-bold font-headline mb-2 text-on-background">System Offline</h3>
+                <p class="text-on-surface-variant text-sm mb-6 max-w-sm mx-auto">Failed to establish connection with the backend architecture. Ensure the Flask server is operational at 8000.</p>
+                <button onclick="init()" class="px-6 py-2 bg-error text-on-error rounded-lg font-bold text-xs uppercase tracking-widest hover:bg-error-dim transition-all">Retry Handshake</button>
+            </div>
+        `;
     }
+}
+
+function renderDynamicCategories(categories) {
+    const nav = document.getElementById('category-nav');
+    const mobileNav = document.querySelector('nav.md\\:hidden');
+    
+    // Desktop Nav
+    let navHtml = `
+        <button class="w-full flex items-center gap-3 px-6 py-3 ${currentCategory === 'All' ? 'bg-gradient-to-r from-[#a7a5ff]/10 to-transparent text-[#a7a5ff] border-r-2 border-[#a7a5ff]' : 'text-slate-400'} font-['Manrope'] font-semibold tracking-wide uppercase text-[11px] transition-all" data-category="All" id="nav-all">
+            <span class="material-symbols-outlined">dashboard</span>
+            <span class="sidebar-text">All Systems</span>
+        </button>
+    `;
+
+    // Mobile Nav
+    let mobileHtml = `
+        <button class="${currentCategory === 'All' ? 'text-secondary' : 'text-on-surface-variant'}" data-category="All"><span class="material-symbols-outlined">dashboard</span></button>
+    `;
+
+    categories.forEach(cat => {
+        const icon = getCategoryIcon(cat.name);
+        const isActive = currentCategory === cat.name;
+        
+        navHtml += `
+            <button class="w-full flex items-center gap-3 px-6 py-3 ${isActive ? 'bg-gradient-to-r from-[#a7a5ff]/10 to-transparent text-[#a7a5ff] border-r-2 border-[#a7a5ff]' : 'text-slate-400'} hover:text-slate-100 hover:bg-[#192540] transition-all font-['Manrope'] font-semibold tracking-wide uppercase text-[11px]" data-category="${cat.name}" id="nav-${cat.name.toLowerCase()}">
+                <span class="material-symbols-outlined">${icon}</span>
+                <span class="sidebar-text">${cat.name}</span>
+            </button>
+        `;
+
+        mobileHtml += `
+            <button class="${isActive ? 'text-secondary' : 'text-on-surface-variant'}" data-category="${cat.name}"><span class="material-symbols-outlined">${icon}</span></button>
+        `;
+    });
+
+    nav.innerHTML = navHtml;
+    mobileNav.innerHTML = mobileHtml;
+
+    // Re-attach event listeners
+    const allBtns = document.querySelectorAll('[data-category]');
+    allBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentCategory = btn.getAttribute('data-category');
+            renderDynamicCategories(categories); // Re-render to update active state
+            filterAndSearch();
+        });
+    });
+}
+
+function getCategoryIcon(name) {
+    const icons = {
+        'Desenvolvimento': 'code',
+        'Infraestrutura': 'database',
+        'IA': 'psychology',
+        'Media': 'movie',
+        'Network': 'router',
+        'Files': 'folder',
+        'Games': 'sports_esports'
+    };
+    return icons[name] || 'label';
 }
 
 // Sidebar Logic
@@ -52,14 +151,18 @@ sidebarToggle.addEventListener('click', () => {
     localStorage.setItem('sidebar_collapsed', isCollapsed);
 });
 
-function updateCategories() {
-    const nav = document.getElementById('category-nav');
-    const uniqueCategories = [...new Set(services.map(s => s.category))];
-    // Dynamic category update logic could go here
-}
-
 // Render Cards
 function renderCards(data) {
+    if (data.length === 0) {
+        serviceGrid.innerHTML = `
+            <div class="col-span-full flex flex-col items-center justify-center py-20 opacity-30">
+                <span class="material-symbols-outlined text-6xl mb-4">search_off</span>
+                <p class="font-headline font-bold tracking-widest uppercase text-xs">No services found in this sector</p>
+            </div>
+        `;
+        return;
+    }
+
     serviceGrid.innerHTML = data.map(service => {
         const isCustomIcon = service.iconType === 'custom' && service.customIcon;
         const iconContent = isCustomIcon 
@@ -94,23 +197,6 @@ function renderCards(data) {
             </a>
         `;
     }).join('');
-}
-
-// Update Stats
-function updateStats() {
-    const totalServices = services.length;
-    const categories = [...new Set(services.map(s => s.category))].length;
-    
-    statsSummary.innerHTML = `
-        <div class="bg-surface-container rounded-xl p-4 flex flex-col items-center justify-center min-w-[100px] border-b-2 border-secondary">
-            <span class="text-xs font-bold uppercase tracking-widest text-secondary mb-1">Services</span>
-            <span class="text-xl font-bold">${totalServices}</span>
-        </div>
-        <div class="bg-surface-container rounded-xl p-4 flex flex-col items-center justify-center min-w-[100px] border-b-2 border-primary">
-            <span class="text-xs font-bold uppercase tracking-widest text-primary mb-1">Categories</span>
-            <span class="text-xl font-bold">${categories}</span>
-        </div>
-    `;
 }
 
 // Filter logic
