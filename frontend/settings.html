@@ -25,7 +25,8 @@
               "outline-variant": "#40485d",
               "on-surface-variant": "#a3aac4",
               "on-primary": "#1c00a0",
-              "error": "#ff6e84"
+              "error": "#ff6e84",
+              "on-background": "#dee5ff"
             },
             fontFamily: {
               "headline": ["Manrope"],
@@ -39,6 +40,17 @@
         body { font-family: 'Inter', sans-serif; }
         .font-headline { font-family: 'Manrope', sans-serif; }
         .glass-sidebar { background: rgba(9, 19, 40, 0.6); backdrop-filter: blur(20px); }
+        
+        /* Tema Claro (Inverso) */
+        .dark body { background-color: #060e20; color: #dee5ff; }
+        html:not(.dark) body { background-color: #f0f4ff; color: #060e20; }
+        
+        html:not(.dark) .bg-background { background-color: #f0f4ff; }
+        html:not(.dark) .text-on-surface { color: #060e20; }
+        html:not(.dark) .bg-surface-container-low { background-color: #ffffff; }
+        html:not(.dark) .bg-surface-container-highest { background-color: #e0e6f5; }
+        html:not(.dark) .glass-sidebar { background: rgba(255, 255, 255, 0.6); border-color: rgba(0,0,0,0.1); }
+        html:not(.dark) .text-slate-400 { color: #64748b; }
         
         /* Sidebar collapsed state */
         #sidebar.collapsed { width: 80px; }
@@ -88,7 +100,10 @@
                 <h2 class="text-3xl font-extrabold font-headline tracking-tight">Active Services</h2>
                 <p class="text-on-surface-variant text-sm mt-1">Manage shortcuts and redirection nodes.</p>
             </div>
-            <div class="flex gap-3">
+            <div class="flex items-center gap-4">
+                <button class="p-2 text-slate-400 hover:text-secondary transition-colors" id="theme-toggle">
+                    <span class="material-symbols-outlined" id="theme-icon">light_mode</span>
+                </button>
                 <button id="manage-categories-btn" class="flex items-center gap-2 px-5 py-2.5 bg-surface-container-highest text-primary rounded-lg text-sm font-bold hover:bg-surface-variant transition-all border border-outline-variant/20">
                     <span class="material-symbols-outlined text-sm">category</span>
                     Manage Categories
@@ -154,38 +169,26 @@
                     <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">URL</label>
                     <input type="url" id="url" required class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 outline-none text-on-surface">
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 gap-4">
                     <div>
                         <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Category</label>
                         <select id="category" class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 outline-none text-on-surface">
                             <!-- Populated via JS -->
                         </select>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Icon Type</label>
-                        <select id="icon-type" class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 outline-none text-on-surface">
-                            <option value="material">Material Icon</option>
-                            <option value="custom">Custom Icon (SVG/PNG)</option>
-                        </select>
-                    </div>
                 </div>
 
-                <div id="material-icon-group">
-                    <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Material Symbol Name</label>
-                    <input type="text" id="icon" placeholder="dns, code, psychology..." class="w-full bg-surface-container-highest border-none rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary/50 outline-none text-on-surface">
-                </div>
-
-                <div id="custom-icon-group" class="hidden">
-                    <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Upload Icon (SVG/PNG)</label>
+                <div id="custom-icon-group">
+                    <label class="block text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2">Service Icon (SVG/PNG)</label>
                     <div class="flex items-center gap-4">
                         <label for="custom-icon-upload" class="cursor-pointer px-4 py-2 bg-surface-container-highest hover:bg-surface-variant rounded-lg text-xs font-bold transition-colors border border-outline-variant/20">
-                            Choose File
+                            Upload Icon
                         </label>
                         <div id="icon-preview" class="w-12 h-12 rounded-lg bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant/20">
-                            <span class="material-symbols-outlined text-on-surface-variant">image</span>
+                            <span class="material-symbols-outlined text-on-surface-variant">apps</span>
                         </div>
-                        <input type="file" id="custom-icon-upload" accept=".svg,.png" class="hidden">
-                        <span id="file-name" class="text-xs text-on-surface-variant truncate max-w-[150px]">No file chosen</span>
+                        <input type="file" id="custom-icon-upload" accept=".svg,.png,.jpg,.jpeg" class="hidden">
+                        <span id="file-name" class="text-xs text-on-surface-variant truncate max-w-[150px]">Default icon used</span>
                     </div>
                     <input type="hidden" id="custom-icon-data">
                 </div>
@@ -219,6 +222,7 @@
         </div>
     </div>
 
+    <script src="common.js"></script>
     <script src="settings.js"></script>
 </body>
 </html>

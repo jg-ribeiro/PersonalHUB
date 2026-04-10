@@ -40,16 +40,13 @@ async function init() {
         services = [];
         appsData.forEach(cat => {
             cat.apps.forEach(app => {
-                const decodedIcon = app.icon ? atob(app.icon) : 'apps';
                 services.push({
                     id: app.id,
                     name: app.name,
                     url: app.link,
                     category: cat.name,
                     categoryId: cat.id,
-                    icon: decodedIcon,
-                    iconType: (decodedIcon.length > 25) ? 'custom' : 'material',
-                    customIcon: (decodedIcon.length > 25) ? `data:image/png;base64,${app.icon}` : null,
+                    icon: app.icon, // Base64 string from backend
                     status: 'Active',
                     latency: Math.floor(Math.random() * 50) + 'ms'
                 });
@@ -59,8 +56,6 @@ async function init() {
         renderDynamicCategories(categoriesData);
         renderCards(services);
         //updateStats(categoriesData.length);
-        initTheme();
-        initSidebar();
     } catch (error) {
         console.error('Error loading services:', error);
         serviceGrid.innerHTML = `
@@ -107,8 +102,8 @@ function renderDynamicCategories(categories) {
         `;
     });
 
-    nav.innerHTML = navHtml;
-    mobileNav.innerHTML = mobileHtml;
+    if (nav) nav.innerHTML = navHtml;
+    if (mobileNav) mobileNav.innerHTML = mobileHtml;
 
     // Re-attach event listeners
     const allBtns = document.querySelectorAll('[data-category]');
@@ -134,23 +129,6 @@ function getCategoryIcon(name) {
     return icons[name] || 'label';
 }
 
-// Sidebar Logic
-function initSidebar() {
-    const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
-    if (isCollapsed) {
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('sidebar-collapsed');
-        toggleIcon.innerText = 'chevron_right';
-    }
-}
-
-sidebarToggle.addEventListener('click', () => {
-    const isCollapsed = sidebar.classList.toggle('collapsed');
-    mainContent.classList.toggle('sidebar-collapsed');
-    toggleIcon.innerText = isCollapsed ? 'chevron_right' : 'chevron_left';
-    localStorage.setItem('sidebar_collapsed', isCollapsed);
-});
-
 // Render Cards
 function renderCards(data) {
     if (data.length === 0) {
@@ -164,10 +142,10 @@ function renderCards(data) {
     }
 
     serviceGrid.innerHTML = data.map(service => {
-        const isCustomIcon = service.iconType === 'custom' && service.customIcon;
+        const isCustomIcon = service.icon && service.icon.length > 25;
         const iconContent = isCustomIcon 
-            ? `<img src="${service.customIcon}" alt="${service.name}" class="w-8 h-8 object-contain">`
-            : `<span class="material-symbols-outlined text-3xl">${service.icon || 'apps'}</span>`;
+            ? `<img src="data:image/png;base64,${service.icon}" alt="${service.name}" class="w-8 h-8 object-contain">`
+            : `<span class="material-symbols-outlined text-3xl">apps</span>`;
 
         return `
             <a href="${service.url}" target="_blank" rel="noopener noreferrer" class="group block bg-surface-container rounded-xl overflow-hidden hover:bg-surface-container-high transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl hover:shadow-black/60 relative">
@@ -233,21 +211,7 @@ categoryButtons.forEach(btn => {
 });
 
 // Search Event
-searchInput.addEventListener('input', filterAndSearch);
-
-// Theme Toggle
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-    themeIcon.innerText = savedTheme === 'dark' ? 'light_mode' : 'dark_mode';
-}
-
-themeToggle.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    const newTheme = isDark ? 'dark' : 'light';
-    localStorage.setItem('theme', newTheme);
-    themeIcon.innerText = isDark ? 'light_mode' : 'dark_mode';
-});
+if (searchInput) searchInput.addEventListener('input', filterAndSearch);
 
 // Start
 document.addEventListener('DOMContentLoaded', init);

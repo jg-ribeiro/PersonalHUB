@@ -11,9 +11,6 @@ const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebar-toggle');
 const toggleIcon = document.getElementById('toggle-icon');
 const mainContent = document.getElementById('main-content');
-const iconTypeSelect = document.getElementById('icon-type');
-const materialIconGroup = document.getElementById('material-icon-group');
-const customIconGroup = document.getElementById('custom-icon-group');
 const customIconUpload = document.getElementById('custom-icon-upload');
 const iconPreview = document.getElementById('icon-preview');
 const fileNameSpan = document.getElementById('file-name');
@@ -41,16 +38,13 @@ async function init() {
         services = [];
         appsData.forEach(cat => {
             cat.apps.forEach(app => {
-                const decodedIcon = app.icon ? atob(app.icon) : 'apps';
                 services.push({
                     id: app.id,
                     name: app.name,
                     url: app.link,
                     category: cat.name,
                     categoryId: cat.id,
-                    icon: decodedIcon,
-                    iconType: (decodedIcon.length > 25) ? 'custom' : 'material',
-                    customIcon: (decodedIcon.length > 25) ? `data:image/png;base64,${app.icon}` : null
+                    icon: app.icon // This is the base64 string from backend
                 });
             });
         });
@@ -61,40 +55,24 @@ async function init() {
     }
     renderTable();
     renderCategoriesTable();
-    initTheme();
-    initSidebar();
 }
 
 function populateCategorySelect() {
     const select = document.getElementById('category');
-    select.innerHTML = categories.map(cat => `
-        <option value="${cat.id}">${cat.name}</option>
-    `).join('');
-}
-
-// Sidebar Logic
-function initSidebar() {
-    const isCollapsed = localStorage.getItem('sidebar_collapsed') === 'true';
-    if (isCollapsed) {
-        sidebar.classList.add('collapsed');
-        mainContent.classList.add('sidebar-collapsed');
-        toggleIcon.innerText = 'chevron_right';
+    if (select) {
+        select.innerHTML = categories.map(cat => `
+            <option value="${cat.id}">${cat.name}</option>
+        `).join('');
     }
 }
 
-sidebarToggle.addEventListener('click', () => {
-    const isCollapsed = sidebar.classList.toggle('collapsed');
-    mainContent.classList.toggle('sidebar-collapsed');
-    toggleIcon.innerText = isCollapsed ? 'chevron_right' : 'chevron_left';
-    localStorage.setItem('sidebar_collapsed', isCollapsed);
-});
-
 function renderTable() {
+    if (!tableBody) return;
     tableBody.innerHTML = services.map(service => {
-        const isCustomIcon = service.iconType === 'custom' && service.customIcon;
+        const isCustomIcon = service.icon && service.icon.length > 25;
         const iconContent = isCustomIcon 
-            ? `<img src="${service.customIcon}" alt="${service.name}" class="w-6 h-6 object-contain">`
-            : `<span class="material-symbols-outlined text-xl">${service.icon || 'apps'}</span>`;
+            ? `<img src="data:image/png;base64,${service.icon}" alt="${service.name}" class="w-6 h-6 object-contain">`
+            : `<span class="material-symbols-outlined text-xl">apps</span>`;
 
         return `
             <tr class="hover:bg-surface-container/50 transition-colors group">
@@ -126,41 +104,33 @@ function renderTable() {
 }
 
 // Modal Logic
-iconTypeSelect.addEventListener('change', (e) => {
-    if (e.target.value === 'material') {
-        materialIconGroup.classList.remove('hidden');
-        customIconGroup.classList.add('hidden');
-    } else {
-        materialIconGroup.classList.add('hidden');
-        customIconGroup.classList.remove('hidden');
-    }
-});
+if (customIconUpload) {
+    customIconUpload.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            // Basic validation
+            if (!['image/png', 'image/svg+xml', 'image/jpeg'].includes(file.type)) {
+                alert('Please upload a PNG, SVG or JPEG file.');
+                customIconUpload.value = '';
+                return;
+            }
+            if (file.size > 1024 * 1024) { // 1MB limit
+                alert('File size should be less than 1MB.');
+                customIconUpload.value = '';
+                return;
+            }
 
-customIconUpload.addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (file) {
-        // Basic validation
-        if (!['image/png', 'image/svg+xml'].includes(file.type)) {
-            alert('Please upload a PNG or SVG file.');
-            customIconUpload.value = '';
-            return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const data = event.target.result;
+                customIconDataInput.value = data;
+                iconPreview.innerHTML = `<img src="${data}" class="w-full h-full object-contain">`;
+                fileNameSpan.innerText = file.name;
+            };
+            reader.readAsDataURL(file);
         }
-        if (file.size > 1024 * 1024) { // 1MB limit
-            alert('File size should be less than 1MB.');
-            customIconUpload.value = '';
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const data = event.target.result;
-            customIconDataInput.value = data;
-            iconPreview.innerHTML = `<img src="${data}" class="w-full h-full object-contain">`;
-            fileNameSpan.innerText = file.name;
-        };
-        reader.readAsDataURL(file);
-    }
-});
+    });
+}
 
 function openModal(service = null) {
     serviceModal.classList.remove('hidden');
@@ -171,95 +141,85 @@ function openModal(service = null) {
         document.getElementById('url').value = service.url;
         document.getElementById('category').value = service.categoryId;
         
-        const type = service.iconType || 'material';
-        iconTypeSelect.value = type;
-        if (type === 'material') {
-            materialIconGroup.classList.remove('hidden');
-            customIconGroup.classList.add('hidden');
-            document.getElementById('icon').value = service.icon || '';
-        } else {
-            materialIconGroup.classList.add('hidden');
-            customIconGroup.classList.remove('hidden');
-            customIconDataInput.value = service.customIcon || '';
-            iconPreview.innerHTML = service.customIcon 
-                ? `<img src="${service.customIcon}" class="w-full h-full object-contain">`
-                : `<span class="material-symbols-outlined text-on-surface-variant">image</span>`;
+        const isCustomIcon = service.icon && service.icon.length > 25;
+        if (isCustomIcon) {
+            const fullData = `data:image/png;base64,${service.icon}`;
+            customIconDataInput.value = fullData;
+            iconPreview.innerHTML = `<img src="${fullData}" class="w-full h-full object-contain">`;
             fileNameSpan.innerText = 'Current icon';
+        } else {
+            customIconDataInput.value = '';
+            iconPreview.innerHTML = `<span class="material-symbols-outlined text-on-surface-variant">apps</span>`;
+            fileNameSpan.innerText = 'Default icon used';
         }
     } else {
         modalTitle.innerText = 'Add New Service';
         serviceForm.reset();
         document.getElementById('service-id').value = '';
-        iconTypeSelect.value = 'material';
-        materialIconGroup.classList.remove('hidden');
-        customIconGroup.classList.add('hidden');
-        iconPreview.innerHTML = `<span class="material-symbols-outlined text-on-surface-variant">image</span>`;
-        fileNameSpan.innerText = 'No file chosen';
+        iconPreview.innerHTML = `<span class="material-symbols-outlined text-on-surface-variant">apps</span>`;
+        fileNameSpan.innerText = 'Default icon used';
         customIconDataInput.value = '';
     }
 }
 
-addServiceBtn.addEventListener('click', () => openModal());
-closeModalBtn.addEventListener('click', () => serviceModal.classList.add('hidden'));
+if (addServiceBtn) addServiceBtn.addEventListener('click', () => openModal());
+if (closeModalBtn) closeModalBtn.addEventListener('click', () => serviceModal.classList.add('hidden'));
 
-serviceForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('service-id').value;
-    const iconType = iconTypeSelect.value;
-    
-    const name = document.getElementById('name').value;
-    const url = document.getElementById('url').value;
-    const categoryId = document.getElementById('category').value;
-    const iconValue = iconType === 'material' ? document.getElementById('icon').value : customIconDataInput.value;
+if (serviceForm) {
+    serviceForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('service-id').value;
+        
+        const name = document.getElementById('name').value;
+        const url = document.getElementById('url').value;
+        const categoryId = document.getElementById('category').value;
+        const iconValue = customIconDataInput.value;
 
-    // Prepare data for backend
-    let iconBase64 = null;
-    if (iconValue) {
-        if (iconType === 'material') {
-            iconBase64 = btoa(iconValue); // Send base64 encoded name
-        } else {
+        // Prepare data for backend
+        let iconBase64 = null;
+        if (iconValue && iconValue.includes('base64,')) {
             // Remove data:image/...;base64, prefix
             iconBase64 = iconValue.split(',')[1];
         }
-    }
 
-    const payload = {
-        name: name,
-        link: url,
-        icon: iconBase64,
-        categorie_id: parseInt(categoryId)
-    };
+        const payload = {
+            name: name,
+            link: url,
+            icon: iconBase64,
+            categorie_id: parseInt(categoryId)
+        };
 
-    try {
-        let response;
-        if (id) {
-            // Update
-            response = await fetch(`${API_URL}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-        } else {
-            // Create
-            response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+        try {
+            let response;
+            if (id) {
+                // Update
+                response = await fetch(`${API_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } else {
+                // Create
+                response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            }
+
+            if (response.ok) {
+                await init(); // Refresh table
+                serviceModal.classList.add('hidden');
+            } else {
+                const err = await response.json();
+                alert('Error saving service: ' + (err.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error saving service:', error);
+            alert('Error saving service');
         }
-
-        if (response.ok) {
-            await init(); // Refresh table
-            serviceModal.classList.add('hidden');
-        } else {
-            const err = await response.json();
-            alert('Error saving service: ' + (err.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Error saving service:', error);
-        alert('Error saving service');
-    }
-});
+    });
+}
 
 // DOM Elements (Categories)
 const manageCategoriesBtn = document.getElementById('manage-categories-btn');
@@ -273,16 +233,19 @@ const closeCategoryModal = document.getElementById('close-category-modal');
 const categoryModalTitle = document.getElementById('category-modal-title');
 
 // Section Switching
-manageCategoriesBtn.addEventListener('click', () => {
-    const isManaging = categoriesSection.classList.toggle('hidden');
-    servicesSection.classList.toggle('hidden', !isManaging);
-    manageCategoriesBtn.innerHTML = !isManaging 
-        ? `<span class="material-symbols-outlined text-sm">view_list</span> Manage Apps`
-        : `<span class="material-symbols-outlined text-sm">category</span> Manage Categories`;
-});
+if (manageCategoriesBtn) {
+    manageCategoriesBtn.addEventListener('click', () => {
+        const isManaging = categoriesSection.classList.toggle('hidden');
+        servicesSection.classList.toggle('hidden', !isManaging);
+        manageCategoriesBtn.innerHTML = !isManaging 
+            ? `<span class="material-symbols-outlined text-sm">view_list</span> Manage Apps`
+            : `<span class="material-symbols-outlined text-sm">category</span> Manage Categories`;
+    });
+}
 
 // Render Categories Table
 function renderCategoriesTable() {
+    if (!categoriesTableBody) return;
     categoriesTableBody.innerHTML = categories.map(cat => `
         <tr class="hover:bg-surface-container/50 transition-colors group">
             <td class="px-6 py-5 text-sm font-bold font-headline text-on-surface">${cat.name}</td>
@@ -316,44 +279,46 @@ function openCategoryModal(cat = null) {
     }
 }
 
-addCategoryBtn.addEventListener('click', () => openCategoryModal());
-closeCategoryModal.addEventListener('click', () => categoryModal.classList.add('hidden'));
+if (addCategoryBtn) addCategoryBtn.addEventListener('click', () => openCategoryModal());
+if (closeCategoryModal) closeCategoryModal.addEventListener('click', () => categoryModal.classList.add('hidden'));
 
-categoryForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const id = document.getElementById('category-id').value;
-    const name = document.getElementById('cat-name').value;
-    const description = document.getElementById('cat-description').value;
+if (categoryForm) {
+    categoryForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const id = document.getElementById('category-id').value;
+        const name = document.getElementById('cat-name').value;
+        const description = document.getElementById('cat-description').value;
 
-    const payload = { name, description };
+        const payload = { name, description };
 
-    try {
-        let response;
-        if (id) {
-            response = await fetch(`${CATEGORIES_URL}/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-        } else {
-            response = await fetch(CATEGORIES_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+        try {
+            let response;
+            if (id) {
+                response = await fetch(`${CATEGORIES_URL}/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } else {
+                response = await fetch(CATEGORIES_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            }
+
+            if (response.ok) {
+                await init();
+                categoryModal.classList.add('hidden');
+            } else {
+                const err = await response.json();
+                alert('Error saving sector: ' + (err.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Error saving sector:', error);
         }
-
-        if (response.ok) {
-            await init();
-            categoryModal.classList.add('hidden');
-        } else {
-            const err = await response.json();
-            alert('Error saving sector: ' + (err.error || 'Unknown error'));
-        }
-    } catch (error) {
-        console.error('Error saving sector:', error);
-    }
-});
+    });
+}
 
 window.editCategory = (id) => {
     const cat = categories.find(c => c.id === id);
@@ -405,10 +370,7 @@ window.deleteService = async (id) => {
     }
 };
 
-function initTheme() {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-}
-
 // Start
-document.addEventListener('DOMContentLoaded', init);
+document.addEventListener('DOMContentLoaded', () => {
+    init();
+});
