@@ -268,12 +268,12 @@ function renderCategoriesTable() {
 function openCategoryModal(cat = null) {
     categoryModal.classList.remove('hidden');
     if (cat) {
-        categoryModalTitle.innerText = 'Edit Sector';
+        categoryModalTitle.innerText = 'Edit Category';
         document.getElementById('category-id').value = cat.id;
         document.getElementById('cat-name').value = cat.name;
         document.getElementById('cat-description').value = cat.description || '';
     } else {
-        categoryModalTitle.innerText = 'Add New Sector';
+        categoryModalTitle.innerText = 'Add New Category';
         categoryForm.reset();
         document.getElementById('category-id').value = '';
     }
@@ -312,10 +312,10 @@ if (categoryForm) {
                 categoryModal.classList.add('hidden');
             } else {
                 const err = await response.json();
-                alert('Error saving sector: ' + (err.error || 'Unknown error'));
+                alert('Error saving category: ' + (err.error || 'Unknown error'));
             }
         } catch (error) {
-            console.error('Error saving sector:', error);
+            console.error('Error saving category:', error);
         }
     });
 }
@@ -328,8 +328,8 @@ window.editCategory = (id) => {
 window.deleteCategory = async (id) => {
     const appsInCat = services.filter(s => s.categoryId === id).length;
     const msg = appsInCat > 0 
-        ? `Deleting this sector will also delete ${appsInCat} associated services. Are you sure?`
-        : 'Are you sure you want to delete this sector?';
+        ? `Deleting this category will also delete ${appsInCat} associated services. Are you sure?`
+        : 'Are you sure you want to delete this category?';
         
     if (confirm(msg)) {
         try {
@@ -339,10 +339,10 @@ window.deleteCategory = async (id) => {
             if (response.ok) {
                 await init();
             } else {
-                alert('Error deleting sector');
+                alert('Error deleting category');
             }
         } catch (error) {
-            console.error('Error deleting sector:', error);
+            console.error('Error deleting category:', error);
         }
     }
 };
