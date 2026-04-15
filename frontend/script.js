@@ -13,8 +13,8 @@ const sidebarToggle = document.getElementById('sidebar-toggle');
 const toggleIcon = document.getElementById('toggle-icon');
 const mainContent = document.getElementById('main-content');
 
-const API_URL = 'http://localhost:8080/apps';
-const CATEGORIES_URL = 'http://localhost:8080/categories';
+const API_URL = `http://${window.location.hostname}:8000/apps`;
+const CATEGORIES_URL = `http://${window.location.hostname}:8000/categories`;
 
 // Initialize
 async function init() {
