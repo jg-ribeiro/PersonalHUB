@@ -175,16 +175,6 @@ if (serviceForm) {
         const categoryId = document.getElementById('category').value;
         const iconValue = customIconDataInput.value;
 
-        console.log("categoryId:", categoryId);
-        console.log("parsed:", Number(categoryId));
-
-        if (!categoryId) {
-            alert("Selecione uma categoria");
-            return;
-        }
-
-
-
         // Prepare data for backend
         let iconBase64 = null;
         if (iconValue && iconValue.includes('base64,')) {
