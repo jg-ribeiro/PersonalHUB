@@ -4,7 +4,7 @@ from app.models import Category
 
 categories_bp = Blueprint("categories", __name__)
 
-@categories_bp.route("/", methods=["GET", "POST"])
+@categories_bp.route("", methods=["GET", "POST"])
 def categ_operations():
     if request.method == "POST":
         return create_categ()

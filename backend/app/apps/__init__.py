@@ -5,7 +5,7 @@ import base64
 
 apps_bp = Blueprint("apps", __name__)
 
-@apps_bp.route("/", methods=["GET", "POST"])
+@apps_bp.route("", methods=["GET", "POST"])
 def app_operations():
     if request.method == "POST":
         return create_app()
