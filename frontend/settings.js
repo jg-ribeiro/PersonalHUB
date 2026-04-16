@@ -16,8 +16,8 @@ const iconPreview = document.getElementById('icon-preview');
 const fileNameSpan = document.getElementById('file-name');
 const customIconDataInput = document.getElementById('custom-icon-data');
 
-const API_URL = 'http://localhost:8080/apps';
-const CATEGORIES_URL = 'http://localhost:8080/categories';
+const API_URL = `http://${window.location.hostname}:8000/apps`;
+const CATEGORIES_URL = `http://${window.location.hostname}:8000/categories`;
 
 let categories = [];
 
