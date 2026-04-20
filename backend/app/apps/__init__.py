@@ -18,10 +18,11 @@ def create_app():
     
     if not data:
         return jsonify({"error": "Dados inválidos"}), 400
-    elif 'name' not in data or 'link' not in data:
-        return jsonify({"error": "Campos 'name' e 'link' são obrigatórios"}), 400
+    elif 'name' not in data or 'link' not in data or 'categorie_id' not in data:
+        return jsonify({"error": "Campos 'categorie_id', 'name' e 'link' são obrigatórios"}), 400
     
     newapp = HubApp(
+        categorie_id=data['categorie_id'],
         name=data['name'],
         description=data.get('description', None),
         link=data['link']
@@ -93,6 +94,7 @@ def update_app(app):
     if not data:
         return jsonify({"error": "Dados inválidos"}), 400
     
+    app.categorie_id = data.get('categorie_id', app.categorie_id)
     app.name = data.get('name', app.name)
     app.description = data.get('description', app.description)
     app.link = data.get('link', app.link)
